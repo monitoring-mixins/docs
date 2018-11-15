@@ -1,12 +1,20 @@
-# Prometheus Monitoring Mixin for Kubernetes
+# Prometheus Monitoring Mixins
 
-> NOTE: This project is *alpha* stage. Flags, configuration, behaviour and design may change significantly in following releases.
+> NOTE: This project is *beta* stage.
 
-A set of Grafana dashboards and Prometheus alerts for Kubernetes.
+A mixin is a set of Grafana dashboards and Prometheus rules and alerts, packaged together in a reuseable and extensible bundle.
+Mixins are written in [jsonnet](https://jsonnet.org/), and are typically installed and updated with [jsonnet-bundler](https://github.com/jsonnet-bundler/jsonnet-bundler).
 
-## How to use
+For more information about mixins, see:
+* For more motivation, see
+"[The RED Method: How to instrument your services](https://kccncna17.sched.com/event/CU8K/the-red-method-how-to-instrument-your-services-b-tom-wilkie-kausal?iframe=no&w=100%&sidebar=yes&bg=no)" talk from CloudNativeCon Austin.  The KLUMPs system demo'd became the basis for the kubernetes-mixin.
+* [Prometheus Monitoring Mixins Design Doc](https://docs.google.com/document/d/1A9xvzwqnFVSOZ5fD3blKODXfsat5fg6ZhnKu9LK3lB4/view). A [cached pdf](design.pdf) is included in this repo.
+* "[Prometheus Monitoring Mixins: Using Jsonnet to Package Together Dashboards, Alerts and Exporters](https://www.youtube.com/watch?v=b7-DtFfsL6E)" KubeCon 2018 talk.
+* "[Prometheus Monitoring Mixins: Using Jsonnet to Package Together Dashboards, Alerts and Exporters](https://promcon.io/2018-munich/talks/prometheus-monitoring-mixins/)" PromCon 2018 talk, slightly updated.
 
-This mixin is designed to be vendored into the repo with your infrastructure config.
+## How to use mixins.
+
+Mixins are designed to be vendored into the repo with your infrastructure config.
 To do this, use [jsonnet-bundler](https://github.com/jsonnet-bundler/jsonnet-bundler):
 
 You then have three options for deploying your dashboards
@@ -27,8 +35,8 @@ $ brew install jsonnet
 Then, grab the mixin and its dependencies:
 
 ```
-$ git clone https://github.com/kubernetes-monitoring/kubernetes-mixin
-$ cd kubernetes-mixin
+$ git clone https://github.com/<mixin org>/<mixin repo>
+$ cd <mixin repo>
 $ jb install
 ```
 
@@ -48,7 +56,7 @@ monitoring stack to Kubernetes.
 ## Using with prometheus-ksonnet
 
 Alternatively you can also use the mixin with
-[prometheus-ksonnet](https://github.com/kausalco/public/tree/master/prometheus-ksonnet),
+[prometheus-ksonnet](https://github.com/grafana/jsonnet-libs/tree/master/prometheus-ksonnet),
 a [ksonnet](https://github.com/ksonnet/ksonnet) module to deploy a fully-fledged
 Prometheus-based monitoring system for Kubernetes:
 
@@ -99,16 +107,17 @@ Apply your config:
 $ ks apply default
 ```
 
-## Using prometheus-operator
+## Using kube-prometheus
 
-TODO
+See the kube-prometheus docs for [instructions on how to use mixins with kube-prometheus](https://github.com/coreos/prometheus-operator/blob/master/contrib/kube-prometheus/README.md#kube-prometheus).
 
 ## Customising the mixin
 
-Kubernetes-mixin allows you to override the selectors used for various jobs,
+Mixins typically allows you to override the selectors used for various jobs,
 to match those used in your Prometheus set.
 
-In a new directory, add a file `mixin.libsonnet`:
+This example uses the [kubernetes-mixin](https://github.com/kubernetes-monitoring/kubernetes-mixin).
+ In a new directory, add a file `mixin.libsonnet`:
 
 ```
 local kubernetes = import "kubernetes-mixin/mixin.libsonnet";
@@ -137,9 +146,3 @@ $ jsonnet -J vendor -S -e 'std.manifestYamlDoc((import "mixin.libsonnet").promet
 $ jsonnet -J vendor -S -e 'std.manifestYamlDoc((import "mixin.libsonnet").prometheusRules)' >files/rules.yml
 $ jsonnet -J vendor -m files/dashboards -e '(import "mixin.libsonnet").grafanaDashboards'
 ```
-
-## Background
-
-* For more motivation, see
-"[The RED Method: How to instrument your services](https://kccncna17.sched.com/event/CU8K/the-red-method-how-to-instrument-your-services-b-tom-wilkie-kausal?iframe=no&w=100%&sidebar=yes&bg=no)" talk from CloudNativeCon Austin.
-* For more information about monitoring mixins, see this [design doc](https://docs.google.com/document/d/1A9xvzwqnFVSOZ5fD3blKODXfsat5fg6ZhnKu9LK3lB4/edit#).
