@@ -6,11 +6,11 @@ A mixin is a set of Grafana dashboards and Prometheus rules and alerts, packaged
 Mixins are written in [jsonnet](https://jsonnet.org/), and are typically installed and updated with [jsonnet-bundler](https://github.com/jsonnet-bundler/jsonnet-bundler).
 
 For more information about mixins, see:
-* For more motivation, see
-"[The RED Method: How to instrument your services](https://kccncna17.sched.com/event/CU8K/the-red-method-how-to-instrument-your-services-b-tom-wilkie-kausal?iframe=no&w=100%&sidebar=yes&bg=no)" talk from CloudNativeCon Austin.  The KLUMPs system demo'd became the basis for the kubernetes-mixin.
 * [Prometheus Monitoring Mixins Design Doc](https://docs.google.com/document/d/1A9xvzwqnFVSOZ5fD3blKODXfsat5fg6ZhnKu9LK3lB4/view). A [cached pdf](design.pdf) is included in this repo.
-* "[Prometheus Monitoring Mixins: Using Jsonnet to Package Together Dashboards, Alerts and Exporters](https://www.youtube.com/watch?v=b7-DtFfsL6E)" KubeCon 2018 talk.
-* "[Prometheus Monitoring Mixins: Using Jsonnet to Package Together Dashboards, Alerts and Exporters](https://promcon.io/2018-munich/talks/prometheus-monitoring-mixins/)" PromCon 2018 talk, slightly updated.
+* For more motivation, see
+"[The RED Method: How to instrument your services](https://kccncna17.sched.com/event/CU8K/the-red-method-how-to-instrument-your-services-b-tom-wilkie-kausal?iframe=no&w=100%&sidebar=yes&bg=no)" talk from CloudNativeCon Austin 2018.  The KLUMPs system demo'd became the basis for the kubernetes-mixin.
+* "[Prometheus Monitoring Mixins: Using Jsonnet to Package Together Dashboards, Alerts and Exporters](https://www.youtube.com/watch?v=b7-DtFfsL6E)" talk from CloudNativeCon Copenhagen 2018.
+* "[Prometheus Monitoring Mixins: Using Jsonnet to Package Together Dashboards, Alerts and Exporters](https://promcon.io/2018-munich/talks/prometheus-monitoring-mixins/)" talk from PromCon 2018 (slightly updated).
 
 ## How to use mixins.
 
@@ -18,9 +18,9 @@ Mixins are designed to be vendored into the repo with your infrastructure config
 To do this, use [jsonnet-bundler](https://github.com/jsonnet-bundler/jsonnet-bundler):
 
 You then have three options for deploying your dashboards
-1. Generate the config files and deploy them yourself
-1. Use ksonnet to deploy this mixin along with Prometheus and Grafana
-1. Use prometheus-operator to deploy this mixin (TODO)
+1. Generate the config files and deploy them yourself.
+1. Use ksonnet to deploy this mixin along with Prometheus and Grafana.
+1. Use kube-prometheus to deploy this mixin.
 
 ## Generate config files
 
