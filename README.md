@@ -114,7 +114,7 @@ $ ks apply default
 
 ## Using kube-prometheus
 
-See the kube-prometheus docs for [instructions on how to use mixins with kube-prometheus](https://github.com/coreos/prometheus-operator/blob/master/contrib/kube-prometheus/README.md#kube-prometheus).
+See the kube-prometheus docs for [instructions on how to use mixins with kube-prometheus](https://github.com/coreos/kube-prometheus#kube-prometheus).
 
 ## Customising the mixin
 
