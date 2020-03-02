@@ -11,6 +11,7 @@
 | [Hashicorp Consul](https://www.consul.io/) | [grafana/jsonnet-libs/consul-mixin](https://github.com/grafana/jsonnet-libs/tree/master/consul-mixin) |
 | [Jaeger](https://www.jaegertracing.io/) | [grafana/jsonnet-libs/jaeger-mixin](https://github.com/grafana/jsonnet-libs/tree/master/jaeger-mixin) |
 | [Kubernetes](https://kubernetes.io/) | [kubernetes-monitoring/kubernetes-mixin](https://github.com/kubernetes-monitoring/kubernetes-mixin) |
+| [Kube-state-metrics](https://github.com/kubernetes/kube-state-metrics) | [kubernetes/kube-state-metrics/jsonnet/kube-state-metrics-mixin](https://github.com/kubernetes/kube-state-metrics/tree/master/jsonnet/kube-state-metrics-mixin) |
 | [Memcached](https://memcached.org/) | [grafana/jsonnet-libs/memcached-mixin](https://github.com/grafana/jsonnet-libs/tree/master/memcached-mixin) |
 | [Node Exporter](https://github.com/prometheus/node_exporter) | [prometheus/node-exporter/docs/node-mixin](https://github.com/prometheus/node_exporter/tree/master/docs/node-mixin) |
 | [Prometheus](https://prometheus.io) | [prometheus/prometheus/docs/prometheus-mixin](https://github.com/prometheus/prometheus/tree/master/documentation/prometheus-mixin) |
