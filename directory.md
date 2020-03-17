@@ -15,3 +15,4 @@
 | [Memcached](https://memcached.org/) | [grafana/jsonnet-libs/memcached-mixin](https://github.com/grafana/jsonnet-libs/tree/master/memcached-mixin) |
 | [Node Exporter](https://github.com/prometheus/node_exporter) | [prometheus/node-exporter/docs/node-mixin](https://github.com/prometheus/node_exporter/tree/master/docs/node-mixin) |
 | [Prometheus](https://prometheus.io) | [prometheus/prometheus/docs/prometheus-mixin](https://github.com/prometheus/prometheus/tree/master/documentation/prometheus-mixin) |
+| [Sealed Secrets](https://github.com/bitnami-labs/sealed-secrets) | [contrib/prometheus-mixin](https://github.com/bitnami-labs/sealed-secrets/tree/master/contrib/prometheus-mixin) |
