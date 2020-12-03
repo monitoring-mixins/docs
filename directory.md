@@ -4,7 +4,7 @@
 
 | Target | Mixin |
 |--------|-------|
-| [Alertmanager](https://github.com/prometheus/alertmanager) | [prometheus/alertmanager/doc/alertmanager-mixin](https://github.com/prometheus/alertmanager/pull/1629) (pending PR) |
+| [Alertmanager](https://github.com/prometheus/alertmanager) | [prometheus/alertmanager/doc/alertmanager-mixin](https://github.com/prometheus/alertmanager/tree/master/doc/alertmanager-mixin) |
 | [Etcd](https://coreos.com/etcd/) | [etcd-io/etcd/Documentation/etcd-mixin](https://github.com/etcd-io/etcd/tree/master/Documentation/etcd-mixin) |
 | [Ceph](https://ceph.com/) | [ceph/ceph-mixin](https://github.com/ceph/ceph-mixins) |
 | [Cert Manager](https://gitlab.com/uneeq-oss/cert-manager-mixin) | [cert-manager-mixin](https://gitlab.com/uneeq-oss/cert-manager-mixin) |
