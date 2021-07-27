@@ -31,7 +31,7 @@ must install some tools:
 $ go get github.com/jsonnet-bundler/jsonnet-bundler/cmd/jb
 
 # macOS
-$ brew install jsonnet
+$ brew install jsonnet-bundler
 
 # Archlinux AUR
 $ yay -S jsonnet
