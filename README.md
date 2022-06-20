@@ -28,7 +28,7 @@ You can manually generate the alerts, dashboards and rules files, but first you
 must install some tools:
 
 ```
-$ go get github.com/jsonnet-bundler/jsonnet-bundler/cmd/jb
+$ go install github.com/jsonnet-bundler/jsonnet-bundler/cmd/jb@latest
 
 # macOS
 $ brew install jsonnet-bundler
