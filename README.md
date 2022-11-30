@@ -12,6 +12,53 @@ For more information about mixins, see:
 * "[Prometheus Monitoring Mixins: Using Jsonnet to Package Together Dashboards, Alerts and Exporters](https://www.youtube.com/watch?v=b7-DtFfsL6E)" talk from CloudNativeCon Copenhagen 2018.
 * "[Prometheus Monitoring Mixins: Using Jsonnet to Package Together Dashboards, Alerts and Exporters](https://promcon.io/2018-munich/talks/prometheus-monitoring-mixins/)" talk from PromCon 2018 (slightly updated).
 
+## Mixin creation guidelines
+
+Mixins follow a standard structure, which is enforced by the [mixtool CLI](https://github.com/monitoring-mixins/mixtool).
+
+The schema defines 4 root jsonnet objects to keep Grafana dashboards, Prometheus alerts and rules, and configuration parameters to be applied on the fly when building the mixin.
+
+```
+.
+├── grafanaDashboards::
+├── prometheusAlerts::
+│   ├── groups:
+├── prometheusRules::
+│   ├── groups:
+├── _config::
+```
+
+This is the expected structure of a mixin jsonnet object definition. The actual recommended file structure has a `mixin.libsonnet` file as root, like the following.
+
+```
+.
+├── mixin.libsonnet
+├── dashboards
+│   ├── dashboards.libsonnet
+│   │   ├── grafanaDashboards::
+├── alerts
+│   ├── alerts.libsonnet
+│   │   ├── prometheusAlerts::
+├── rules
+│   ├── rules.libsonnet
+│   │   ├── prometheusRules::
+``` 
+
+Please note that all the 3 jsonnet objects are made hidden/private (indicated by the trailing ::). 
+This is the expected standard to be used with mixtool CLI.
+If you want to use pure jsonnet commands against the mixin, please make those objects public.
+
+The mixin.libsonnet file imports all the files described on the previous section, packaging up the mixin. 
+It may also contain some changes to the original files, whenever needed. 
+These can be defined in itself or importing another jsonnet definition file that changes any of the 4 objects of the structure.
+
+```json
+(import 'dashboards/dashboards.libsonnet') +
+(import 'alerts/alerts.libsonnet') +
+(import 'rules/rules.libsonnet')
+(import 'config.libsonnet') +
+```
+
 ## How to use mixins.
 
 Mixins are designed to be vendored into the repo with your infrastructure config.
@@ -19,22 +66,16 @@ To do this, use [jsonnet-bundler](https://github.com/jsonnet-bundler/jsonnet-bun
 
 You then have three options for deploying your dashboards
 1. Generate the config files and deploy them yourself.
-1. Use ksonnet to deploy this mixin along with Prometheus and Grafana.
-1. Use kube-prometheus to deploy this mixin.
+2. Use kube-prometheus to deploy this mixin.
+3. Use Grizzly to deploy this mixin
 
 ## Generate config files
 
 You can manually generate the alerts, dashboards and rules files, but first you
-must install some tools:
+must install some tools. Make sure you're using golang v1.17 or higher, and run:
 
 ```
-$ go install github.com/jsonnet-bundler/jsonnet-bundler/cmd/jb@latest
-
-# macOS
-$ brew install jsonnet-bundler
-
-# Archlinux AUR
-$ yay -S jsonnet
+go install github.com/monitoring-mixins/mixtool/cmd/mixtool@master
 ```
 
 Then, grab the mixin and its dependencies:
@@ -45,76 +86,30 @@ $ cd <mixin repo>
 $ jb install
 ```
 
-Finally, build the mixin:
+Finally, build the mixin with the self contained Makefile, that can be copied from the one present in this repo:
 
 ```
 $ make prometheus_alerts.yaml
 $ make prometheus_rules.yaml
 $ make dashboards_out
+$ make all
 ```
 
+All files are generated inside an `out` folder. 
 The `prometheus_alerts.yaml` and `prometheus_rules.yaml` file then need to passed
-to your Prometheus server, and the files in `dashboards_out` need to be imported
+to your Prometheus server, and the files in `out/dashboards` need to be imported
 into you Grafana server.  The exact details will depending on how you deploy your
 monitoring stack to Kubernetes.
-
-## Using with prometheus-ksonnet
-
-Alternatively you can also use the mixin with
-[prometheus-ksonnet](https://github.com/grafana/jsonnet-libs/tree/master/prometheus-ksonnet),
-a [ksonnet](https://github.com/ksonnet/ksonnet) module to deploy a fully-fledged
-Prometheus-based monitoring system for Kubernetes:
-
-Make sure you have the ksonnet v0.8.0:
-
-```
-$ brew install https://raw.githubusercontent.com/ksonnet/homebrew-tap/82ef24cb7b454d1857db40e38671426c18cd8820/ks.rb
-$ brew pin ks
-$ ks version
-ksonnet version: v0.8.0
-jsonnet version: v0.9.5
-client-go version: v1.6.8-beta.0+$Format:%h$
-```
-
-In your config repo, if you don't have a ksonnet application, make a new one (will copy credentials from current context):
-
-```
-$ ks init <application name>
-$ cd <application name>
-$ ks env add default
-```
-
-Grab the kubernetes-jsonnet module using and its dependencies, which include
-the kubernetes-mixin:
-
-```
-$ go get github.com/jsonnet-bundler/jsonnet-bundler/cmd/jb
-$ jb init
-$ jb install github.com/kausalco/public/prometheus-ksonnet
-
-```
-
-Assuming you want to run in the default namespace ('environment' in ksonnet parlance), add the follow to the file `environments/default/main.jsonnet`:
-
-```
-local prometheus = import "prometheus-ksonnet/prometheus-ksonnet.libsonnet";
-
-prometheus {
-  _config+:: {
-    namespace: "default",
-  },
-}
-```
-
-Apply your config:
-
-```
-$ ks apply default
-```
 
 ## Using kube-prometheus
 
 See the kube-prometheus docs for [instructions on how to use mixins with kube-prometheus](https://github.com/coreos/kube-prometheus#kube-prometheus).
+
+## Using Grizzly
+
+See the grizzly docs for [instructions on how to use mixins with grizzly](https://grafana.github.io/grizzly/hidden-elements/)
+
+Grizzly support for monitoring-mixin standard is deprecated, but you can use [this adapter](https://github.com/grafana/jsonnet-libs/tree/master/grizzly) to make it work on newer versions of Grizlly.
 
 ## Customising the mixin
 
@@ -122,7 +117,7 @@ Mixins typically allows you to override the selectors used for various jobs,
 to match those used in your Prometheus set.
 
 This example uses the [kubernetes-mixin](https://github.com/kubernetes-monitoring/kubernetes-mixin).
- In a new directory, add a file `mixin.libsonnet`:
+In a new directory, add a file `mixin.libsonnet`:
 
 ```
 local kubernetes = import "kubernetes-mixin/mixin.libsonnet";
@@ -148,9 +143,10 @@ Generate the alerts, rules and dashboards:
 
 ```
 $ jsonnet -J vendor -S -e 'std.manifestYamlDoc((import "mixin.libsonnet").prometheusAlerts)' > alerts.yml
-$ jsonnet -J vendor -S -e 'std.manifestYamlDoc((import "mixin.libsonnet").prometheusRules)' >files/rules.yml
+$ jsonnet -J vendor -S -e 'std.manifestYamlDoc((import "mixin.libsonnet").prometheusRules)' > files/rules.yml
 $ jsonnet -J vendor -m files/dashboards -e '(import "mixin.libsonnet").grafanaDashboards'
 ```
+
 ## Guidelines for alert names, labels, and annotations
 
 Prometheus alerts deliberately allow users to define their own schema for
